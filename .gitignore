@@ -1,0 +1,13 @@
+.vs
+*.suo
+*.db
+*.sln
+*.vc*
+*.exp
+*.dll
+*.pdb
+*.ilk
+*.log
+sdk
+bin
+obj
