@@ -16,8 +16,9 @@ public:
 
 private:
 	Icetrix::Feature* feature = new Icetrix::Feature{ "Radar" };
-	float scale = 1.0f;
+	float scale = 2.25f;
 	float zoom = 1.0f;
+	DWORD64 baseAddress = g_dMainModuleBase;
 
 public:
 	void Attach() { Icetrix::Features::GetInstance()->Push(feature); }
@@ -32,8 +33,8 @@ public:
 			return;
 
 		ImGui::Begin("Radar Settings", NULL, ImGuiWindowFlags_AlwaysAutoResize);
-		ImGui::SliderFloat("Scale", &scale, -100, +100);
-		ImGui::SliderFloat("Zoom", &zoom, -100, +100);
+		ImGui::SliderFloat("Scale", &scale, 0, 10);
+		ImGui::SliderFloat("Zoom", &zoom, 0.5, 100);
 		ImGui::End();
 	}
 
@@ -84,8 +85,11 @@ public:
 				if (entity->health_readonly <= 0.01f)
 					continue;
 
+				DWORD64 pitch = (DWORD64)baseAddress + 0xC1E4B0;
+				float yaw = *(float*)(baseAddress + 0xC1E4B4);
+
 				// calculate delta between entity and local player
-				ImVec2 screen = WorldToRadar(entity->coords, player->coords, player->rotation, zoom);
+				ImVec2 screen = WorldToRadar(entity->coords, player->coords, yaw, zoom, false);
 				draw_list->AddCircleFilled(ImVec2(center.x + screen.x, center.y + screen.y), scale, ImColor(0, 255, 0));
 			}
 
@@ -107,26 +111,31 @@ protected:
 		ImVec2  DesiredSize;    // Read-write.  Desired size, based on user's mouse position. Write to this field to restrain resizing.
 	};
 
-	ImVec2 WorldToRadar(Vector3 entityCoords, Vector3 playerCoords, Vector3 playerRotation, float zoom)
+	#define URotationToRadians( URotation )		( ( URotation ) * ( M_PI / 32768.0f ) ) 
+	#define URotationToDegree( URotation )		( ( URotation ) * ( 360.0f / 65536.0f ) ) 
+	#define DegreeToURotation( Degree )			( ( Degree ) * ( 65536.0f / 360.0f ) )
+	#define DegreeToRadian( Degree )			( ( Degree ) * ( M_PI / 180.0f ) )
+	#define RadianToURotation( URotation )		( ( URotation ) * ( 32768.0f / M_PI ) ) 
+	#define RadianToDegree( Radian )			( ( Radian ) * ( 180.0f / M_PI ) )
+
+	ImVec2 WorldToRadar(Vector3 entityCoords, Vector3 playerCoords, float yaw, float zoom, bool degreeToRadian = false)
 	{
-		Vector3 delta;
+		Vector2 delta;
 		delta.x = entityCoords.x - playerCoords.x;
-		//delta.y = entityCoords.y - playerCoords.y;
 		delta.y = entityCoords.z - playerCoords.z;
 
 		// scale delta to screen coords
 		ImVec2 screen;
-		screen.x = delta.x / zoom;
-		screen.y = delta.y / zoom;
+		screen.x = delta.x * zoom;
+		screen.y = delta.y * zoom;
 		
-		// rotate screen using rotation matrix
-		// convert yaw degree to radian
-		float yaw = static_cast<float>((playerRotation.x) * M_PI / 180.0);
-		//float yaw = playerRotation.x;
+		if (degreeToRadian)
+			yaw = DegreeToRadian(yaw);
 
 		ImVec2 rotation;
-		rotation.x = (screen.x * cos(yaw)) - (screen.y * sin(yaw));
-		rotation.y = (-screen.x * sin(yaw)) + (screen.y * cos(yaw));
+		float adjust = DegreeToRadian(180);
+		rotation.x = -screen.x * (cos(yaw + adjust)) + screen.y * (sin(yaw + adjust));
+		rotation.y = screen.x * (sin(yaw + adjust)) + screen.y * (cos(yaw + adjust));
 
 		return rotation;
 	}
