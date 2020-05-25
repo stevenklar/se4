@@ -95,9 +95,6 @@ public:
 		if (!g_sFeatures->Get(patch->name) || !g_sFeatures->Get(patch->name)->enabled)
 			return;
 
-		if (localPlayerPtr && localPlayerPtr->N0000046B && localPlayerPtr->N0000046B->N00000482)
-			g_mono("player") = localPlayerPtr->N0000046B->N00000482;
-
 		g_mono("entities") = entities;
 		Entity* player = g_mono("player");
 
@@ -147,10 +144,14 @@ public:
 					char entityName[16];
 					sprintf(entityName, "Entity [%d]", i);
 
+#ifdef DEBUG
 					char entityAddress[16];
 					sprintf(entityAddress, "%I64x", (DWORD64)ent);
+					g_sRenderer->RenderText(entityAddress, { screen.x, screen.y + relativeInfo }, 15.0f, 0xFFFF0000, true);
+					relativeInfo += 15.0f;
+#endif
 
-					g_sRenderer->RenderText(entityName, { screen.x, screen.y }, 15.0f, 0xFFFF0000, true);
+					g_sRenderer->RenderText(entityName, { screen.x, screen.y + relativeInfo }, 15.0f, 0xFFFF0000, true);
 					relativeInfo += 15.0f;
 				}
 

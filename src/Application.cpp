@@ -13,8 +13,12 @@ void Icetrix::CreateApplication()
 
 	// Game layer
 	LAYER(AntiDebug);
+	LAYER(LocalPlayer);
 	LAYER(ESP);
 	LAYER(Radar);
 	LAYER(Godmode);
 	LAYER(Patches);
+	LAYER(NoClip);
+
+	LAYER(Bunnyhop);
 }

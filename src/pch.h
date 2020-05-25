@@ -19,7 +19,9 @@
 
 // Application Layers
 #include "Layer/ESP.h"
+#include "Layer/LocalPlayer.h"
 #include "Layer/AntiDebug.h"
 #include "Layer/Patches.h"
 #include "Layer/Godmode.h"
 #include "Layer/Radar.h"
+#include "Layer/NoClip.h"

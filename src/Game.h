@@ -6,13 +6,15 @@ class Entity
 {
 public:
 	char pad_0000[16]; //0x0000
-	class N00000192* checkptr; //0x0010
+	class PositionPtrBase* checkptr; //0x0010
 	char pad_0018[32]; //0x0018
 	Vector3 v1; //0x0038
 	Vector3 coords; //0x0044
 	Vector3 v3; //0x0050
 	Vector3 v4; //0x005C
-	char pad_0068[228]; //0x0068
+	char pad_0068[184]; //0x0068
+	class N000004A3* p_pos1; //0x0120
+	char pad_0128[36]; //0x0128
 	Vector3 rotation_readonly; //0x014C
 	Vector3 rotation; //0x0158
 	float N000005C4; //0x0164
@@ -25,16 +27,14 @@ public:
 	Vector3 b3; //0x08C8
 	char pad_08D4[232]; //0x08D4
 	float health_readonly; //0x09BC
-	char pad_09C0[328]; //0x09C0
 }; //Size: 0x0B08
-static_assert(sizeof(Entity) == 0xB08);
 
-class N00000192
+class PositionPtrBase
 {
 public:
-	char pad_0000[136]; //0x0000
-}; //Size: 0x0088
-static_assert(sizeof(N00000192) == 0x88);
+	class PositionPtr* N00000193; //0x0000
+}; //Size: 0x0008
+static_assert(sizeof(PositionPtrBase) == 0x8);
 
 class N0000034C
 {
@@ -111,16 +111,75 @@ static_assert(sizeof(N00000CB1) == 0x88);
 class LocalPlayer1
 {
 public:
-	class N0000047D* N0000046B; //0x0000
+	class asdsdaasd* N0000046B; //0x0000
 	char pad_0008[120]; //0x0008
 }; //Size: 0x0080
 static_assert(sizeof(LocalPlayer1) == 0x80);
 
-class N0000047D
+class asdsdaasd
 {
 public:
 	char pad_0000[32]; //0x0000
 	class Entity* N00000482; //0x0020
 	char pad_0028[96]; //0x0028
 }; //Size: 0x0088
-static_assert(sizeof(N0000047D) == 0x88);
+static_assert(sizeof(asdsdaasd) == 0x88);
+
+class PositionPtr
+{
+public:
+	char pad_0000[88]; //0x0000
+	Vector3 N00000805; //0x0058
+	char pad_0064[56]; //0x0064
+}; //Size: 0x009C
+static_assert(sizeof(PositionPtr) == 0x9C);
+
+class N000004A3
+{
+public:
+	char pad_0000[8]; //0x0000
+	class N000004B7* p_pos2; //0x0008
+}; //Size: 0x0010
+static_assert(sizeof(N000004A3) == 0x10);
+
+class N000004B7
+{
+public:
+	char pad_0000[3216]; //0x0000
+}; //Size: 0x0C90
+static_assert(sizeof(N000004B7) == 0xC90);
+
+class WorldPosition
+{
+public:
+	char pad_0000[1104]; //0x0000
+	class N000008D9* p1; //0x0450
+}; //Size: 0x0458
+static_assert(sizeof(WorldPosition) == 0x458);
+
+class N000008D9
+{
+public:
+	char pad_0000[16]; //0x0000
+	class N000008ED* p2; //0x0010
+	char pad_0018[112]; //0x0018
+}; //Size: 0x0088
+static_assert(sizeof(N000008D9) == 0x88);
+
+class N000008ED
+{
+public:
+	char pad_0000[16]; //0x0000
+	class N00000901* p3; //0x0010
+	char pad_0018[112]; //0x0018
+}; //Size: 0x0088
+static_assert(sizeof(N000008ED) == 0x88);
+
+class N00000901
+{
+public:
+	char pad_0000[96]; //0x0000
+	Vector3 m_pos; //0x0060
+	char pad_006C[32]; //0x006C
+}; //Size: 0x008C
+static_assert(sizeof(N00000901) == 0x8C);
