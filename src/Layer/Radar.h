@@ -89,8 +89,8 @@ public:
 				float yaw = *(float*)(baseAddress + 0xC1E4B4);
 
 				// calculate delta between entity and local player
-				ImVec2 screen = WorldToRadar(entity->coords, player->coords, yaw, zoom, false);
-				draw_list->AddCircleFilled(ImVec2(center.x + screen.x, center.y + screen.y), scale, ImColor(0, 255, 0));
+				ImVec2 screen = WorldToRadar(entity->coords, player->coords, yaw, zoom);
+				draw_list->AddCircleFilled(ImVec2(center.x + screen.x, center.y + screen.y), scale, ImColor(255, 0, 0));
 			}
 
 			ImGui::End();
@@ -129,13 +129,9 @@ protected:
 		screen.x = delta.x * zoom;
 		screen.y = delta.y * zoom;
 		
-		if (degreeToRadian)
-			yaw = DegreeToRadian(yaw);
-
 		ImVec2 rotation;
-		float adjust = DegreeToRadian(180);
-		rotation.x = -screen.x * (cos(yaw + adjust)) + screen.y * (sin(yaw + adjust));
-		rotation.y = screen.x * (sin(yaw + adjust)) + screen.y * (cos(yaw + adjust));
+		rotation.x = -screen.x * cos(yaw + M_PI) + screen.y * sin(yaw + M_PI);
+		rotation.y =  screen.x * sin(yaw + M_PI) + screen.y * cos(yaw + M_PI);
 
 		return rotation;
 	}
