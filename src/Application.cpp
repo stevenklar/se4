@@ -19,6 +19,4 @@ void Icetrix::CreateApplication()
 	LAYER(Godmode);
 	LAYER(Patches);
 	LAYER(NoClip);
-
-	LAYER(Bunnyhop);
 }
